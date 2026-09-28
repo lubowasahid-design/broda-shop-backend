@@ -109,7 +109,7 @@ async function initDb() {
       ON activity_events(created_at);
   `);
 
-  console.log("BRODA SHOP database initialized");
+  console.log("BRODA HUB database initialized");
 }
 
 function referralCode() {
@@ -1044,7 +1044,7 @@ async function startServer() {
 
     app.listen(PORT, "0.0.0.0", () => {
       console.log(
-        `BRODA SHOP backend running on port ${PORT}`
+        `BRODA HUB backend running on port ${PORT}`
       );
     });
   } catch (error) {
