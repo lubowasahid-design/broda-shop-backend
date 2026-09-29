@@ -86,7 +86,49 @@ async function initDb() {
       details JSONB DEFAULT '{}'::jsonb,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS content_likes (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      content_id TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (user_id, content_id)
+    );
 
+    CREATE TABLE IF NOT EXISTS content_comments (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      content_id TEXT NOT NULL,
+      body TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS creator_follows (
+      id TEXT PRIMARY KEY,
+      follower_id TEXT NOT NULL,
+      creator_id TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (follower_id, creator_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS creator_subscriptions (
+      id TEXT PRIMARY KEY,
+      subscriber_id TEXT NOT NULL,
+      creator_id TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      amount NUMERIC(14,2) NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (subscriber_id, creator_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS service_subscriptions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      service_key TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      amount NUMERIC(14,2) NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (user_id, service_key)
+    );
     CREATE INDEX IF NOT EXISTS idx_users_email
       ON users(email);
 
