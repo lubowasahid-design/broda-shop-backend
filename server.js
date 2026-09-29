@@ -129,6 +129,34 @@ async function initDb() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       UNIQUE (user_id, service_key)
     );
+    
+    CREATE TABLE IF NOT EXISTS artist_contracts (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'inactive',
+      start_at TIMESTAMPTZ,
+      expires_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_artist_contracts_user_expiry
+      ON artist_contracts(user_id, expires_at);
+
+    CREATE TABLE IF NOT EXISTS contract_payments (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      amount NUMERIC(14,2) NOT NULL,
+      currency TEXT NOT NULL DEFAULT 'UGX',
+      tx_ref TEXT NOT NULL UNIQUE,
+      status TEXT NOT NULL DEFAULT 'pending',
+      provider_transaction_id TEXT,
+      paid_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+
     CREATE INDEX IF NOT EXISTS idx_users_email
       ON users(email);
 
